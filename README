@@ -1,0 +1,53 @@
+Reinforcement Learning for Optimized trade execution
+
+Many research has been done regarding the use of reinforcement learning in optimizing trade
+execution. It has been shown in many hedge fund and research labs that this has indeed
+succeeded in producing consistent profit (for a certain period of time) .
+In this project, I try to implement a simplified version to study the basic working of such a mechanism:
+Train a QLearner using historical stock data to form a policy, then use the trained policy to predict trade actions for new stock data.
+The goal is to beat the market (stock price).
+
+Assumptions and rules:
+Trading is limited to one stock
+assume no transaction fees
+Assume our trading actions itself does not affect stock price in anyway
+start trading with long 100 shares
+starting portfolio value =price of 100 shares
+limit to trade 100 shares per day, can not double down.
+Actions: 0 = BUY, 1 = SELL, 2 = NOTHING
+Positions: 0 = CASH, 1 = SHORT, 2 = LONG
+State used for the qlearner:
+states= (Bollinger Band Value) + (volatility)*10+ (volume)*100+Position*1000
+There are 2999 different states
+
+Modules used: numpy, pandas, pandas_datareader, matplotlib,os,datetime
+
+Description of the Python program:
+
+get_data.py
+Using pandas_datareader module to retrieve historical stock data from yahoo finance
+
+driver_program.py
+Initialize a q learner
+set the stock symbol and time period parameters for both training and testing
+Kick start the learning process
+Then test the learner
+
+q_learner.py:
+This is a qlearner
+class with two functions:
+query_set_state : return the optimal action for the provided state according to the qtable query_up_date: given the new state and reward obtained from executing the last action update the qtable, and return an action to be executed for the next step.
+Note: This q_learner program is independent of the problem we are solving, its state, action and reward parameters can be defined for different problems.
+
+policy_learner.py:
+The PolicyLearner class contain functions that train the learner and test for the learning result.
+
+util.py:
+Utility functions to read data and plot data.
+
+The program was tested on five stocks: AAPL, IBM, GOOG, SPY , CELG
+Training was done on three years of historical data, then tested the trained qtable
+to trade for three month.
+Training was done for 80 trials (one trials= one loop through three years data) , as it is observed that under my parameter settings for the qlearner, 80 trials are enough for qlearner
+to
+converge.
